@@ -6,7 +6,10 @@ import java.util.Observable;
 
 import javax.swing.JOptionPane;
 
+import formats.Formats;
+
 public class TextureModel extends Observable {
+	private static final Formats.Format defaultFormat = Formats.Format.FORMAT_PBR_8CHANNEL;
 	private static final String[] channelName = {
 			"Diffuse",
 			"Roughness",
@@ -16,9 +19,10 @@ public class TextureModel extends Observable {
 	
 	private boolean initialized = false;
 	
+	private String name = "New texture";
+	private Formats.Format format = defaultFormat;
 	private int width;
 	private int height;
-	private String name = "New texture";
 	
 	public enum Channel {
 		CHANNEL_DIFFUSE,
@@ -31,7 +35,8 @@ public class TextureModel extends Observable {
 		CHANGE_NAME,
 		CHANGE_CHANNEL,
 		CHANGE_SIZE,
-		CHANGE_RESULT
+		CHANGE_RESULT,
+		CHANGE_FORMAT
 	}
 	
 	private BufferedImage[] channels = new BufferedImage[Channel.values().length];
@@ -67,6 +72,11 @@ public class TextureModel extends Observable {
 		return channelName[channel.ordinal()];
 	}
 	
+	public Formats.Format getFormat()
+	{
+		return format;
+	}
+	
 	public int getWidth()
 	{
 		return width;
@@ -82,6 +92,13 @@ public class TextureModel extends Observable {
 		this.name = name;
 		
 		change(Change.CHANGE_NAME);
+	}
+	
+	public void setFormat(Formats.Format format)
+	{
+		this.format = format;
+		
+		change(Change.CHANGE_FORMAT);
 	}
 	
 	public void setSize(int width, int height)
