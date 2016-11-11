@@ -14,7 +14,8 @@ public class TextureModel extends Observable {
 			"Diffuse",
 			"Roughness",
 			"Metallic",
-			"Normals"
+			"Normals",
+			"Emissive"
 	};
 	
 	private boolean initialized = false;
@@ -28,7 +29,8 @@ public class TextureModel extends Observable {
 		CHANNEL_DIFFUSE,
 		CHANNEL_ROUGHNESS,
 		CHANNEL_METALLIC,
-		CHANNEL_NORMALS
+		CHANNEL_NORMALS,
+		CHANNEL_EMISSIVE
 	}
 	
 	public enum Change {

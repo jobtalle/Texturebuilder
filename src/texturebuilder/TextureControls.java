@@ -9,6 +9,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.AbstractAction;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,11 +17,12 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
 import formats.Formats;
+import texturebuilder.TextureModel.Channel;
 import utils.SpringUtilities;
 
 @SuppressWarnings("serial")
 public class TextureControls extends JPanel implements Observer {
-	private static final int preferredWidth = 160;
+	private static final int preferredWidth = 200;
 	
 	private TextureModel model;
 	
@@ -29,6 +31,7 @@ public class TextureControls extends JPanel implements Observer {
 	private JComboBox<String> format = new JComboBox<String>(Formats.getFormats());
 	private JLabel width = new JLabel();
 	private JLabel height = new JLabel();
+	private JCheckBox[] textures = new JCheckBox[TextureModel.Channel.values().length];
 	
 	public TextureControls(TextureModel model)
 	{
@@ -48,6 +51,10 @@ public class TextureControls extends JPanel implements Observer {
 		case CHANGE_SIZE:
 			width.setText(Integer.toString(this.model.getWidth()));
 			height.setText(Integer.toString(this.model.getHeight()));
+			break;
+		case CHANGE_CHANNEL:
+			for(int i = 0; i < textures.length; ++i)
+				textures[i].setSelected(this.model.getChannel(Channel.values()[i]) != null);
 			break;
 		default:
 			break;
@@ -71,6 +78,12 @@ public class TextureControls extends JPanel implements Observer {
 				model.setFormat(Formats.Format.values()[format.getSelectedIndex()]);
 			}
 		});
+		
+		for(int i = 0; i < textures.length; ++i)
+		{
+			textures[i] = new JCheckBox();
+			textures[i].setEnabled(false);
+		}
 	}
 	
 	private void addElements()
@@ -89,7 +102,13 @@ public class TextureControls extends JPanel implements Observer {
 		wrapper.add(new JLabel("Height", JLabel.TRAILING));
 		wrapper.add(height);
 		
-		SpringUtilities.makeCompactGrid(wrapper, 4, 2, 3, 3, 3, 3);
+		for(int i = 0; i < textures.length; ++i)
+		{
+			wrapper.add(new JLabel(TextureModel.getChannelName(TextureModel.Channel.values()[i]), JLabel.TRAILING));
+			wrapper.add(textures[i]);
+		}
+		
+		SpringUtilities.makeCompactGrid(wrapper, 4 + textures.length, 2, 3, 3, 3, 3);
 		
 		setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
