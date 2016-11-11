@@ -30,11 +30,12 @@ public class TextureModel extends Observable {
 	public enum Change {
 		CHANGE_NAME,
 		CHANGE_CHANNEL,
-		CHANGE_SIZE
+		CHANGE_SIZE,
+		CHANGE_RESULT
 	}
 	
 	private BufferedImage[] channels = new BufferedImage[Channel.values().length];
-	private BufferedImage compiled;
+	private BufferedImage result;
 	
 	public TextureModel()
 	{
@@ -54,6 +55,11 @@ public class TextureModel extends Observable {
 	public BufferedImage getChannel(Channel channel)
 	{
 		return channels[channel.ordinal()];
+	}
+	
+	public BufferedImage getResult()
+	{
+		return result;
 	}
 	
 	public static String getChannelName(Channel channel)
@@ -82,6 +88,9 @@ public class TextureModel extends Observable {
 	{
 		this.width = width;
 		this.height = height;
+		
+		// Create compiled image
+		result = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		
 		change(Change.CHANGE_SIZE);
 	}

@@ -29,7 +29,7 @@ public class TextureView extends JPanel implements Observer {
 		}
 		
 		// Create result tab
-		channels.add("Result", null);
+		channels.add("Result", new ResultView(model));
 		
 		// Create layout
 		setLayout(new GridBagLayout());
@@ -57,9 +57,6 @@ public class TextureView extends JPanel implements Observer {
 	private void effectChange(Change change)
 	{
 		switch(change) {
-		case CHANGE_NAME:
-			
-			break;
 		default:
 			break;
 		}

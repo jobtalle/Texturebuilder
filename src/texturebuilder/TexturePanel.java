@@ -12,7 +12,6 @@ public class TexturePanel extends JPanel {
 	
 	public TexturePanel(BufferedImage image)
 	{
-		this.setImage(image);
 		update(image);
 	}
 	
