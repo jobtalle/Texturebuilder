@@ -15,6 +15,7 @@ public class TextureView extends JPanel implements Observer {
 	private TextureModel model;
 	
 	private JTabbedPane channels = new JTabbedPane();
+	private TextureControls controls;
 	
 	public TextureView(TextureModel model)
 	{
@@ -22,7 +23,11 @@ public class TextureView extends JPanel implements Observer {
 		model.addObserver(this);
 		model.getName();
 		
+		// Create controls
+		controls = new TextureControls(model);
+		
 		// Create preview tabs
+		channels.setFocusable(false);
 		for(TextureModel.Channel channel : TextureModel.Channel.values())
 		{
 			channels.add(TextureModel.getChannelName(channel), new TextureChannel(model, channel));
@@ -37,9 +42,13 @@ public class TextureView extends JPanel implements Observer {
 		
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.anchor = GridBagConstraints.WEST;
-		constraints.weightx = constraints.weighty = 1;
+		constraints.weighty = 1;
 		
 		// Add interface elements
+		constraints.weightx = 0;
+		add(controls, constraints);
+		
+		constraints.weightx = 1;
 		add(channels, constraints);
 	}
 	
