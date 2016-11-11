@@ -3,9 +3,11 @@ package texturebuilder;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.swing.AbstractAction;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -51,6 +53,12 @@ public class TextureControls extends JPanel implements Observer {
 	private void configureElements()
 	{
 		name.setText(model.getName());
+		name.addActionListener(new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				model.setName(name.getText());
+			}
+		});
 	}
 	
 	private void addElements()

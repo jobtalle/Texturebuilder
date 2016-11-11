@@ -1,14 +1,17 @@
 package texturebuilder;
 
+import java.awt.Component;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
-public class Window extends JFrame {
+public class Window extends JFrame implements Observer {
 	private static final int defaultWidth = 1024;
 	private static final int defaultHeight = 768;
 	private static final String defaultTitle = "Texture builder";
@@ -35,6 +38,8 @@ public class Window extends JFrame {
 	public void addView(TextureModel model)
 	{
 		contents.add(model.getName(), new TextureView(model));
+		
+		model.addObserver(this);
 	}
 	
 	public void exit()
@@ -45,15 +50,16 @@ public class Window extends JFrame {
 	
 	public TextureView getCurrentView()
 	{
-		if(contents.getComponentCount() > 0) {
+		if(contents.getComponentCount() > 0)
 			return (TextureView) contents.getComponentAt(contents.getSelectedIndex());
-		}
 		else
 			return null;
 	}
 	
 	public void removeView(TextureView view)
 	{
+		view.getModel().deleteObserver(this);
+		
 		contents.remove(view);
 	}
 	
@@ -95,5 +101,31 @@ public class Window extends JFrame {
 				
 			}
 		});
+	}
+
+	@Override
+	public void update(Observable model, Object change) {
+		for(Component component : contents.getComponents()) {
+			TextureView view = (TextureView)component;
+			
+			if(view.getModel() == model) {
+				break;
+			}
+		}
+		
+		switch((TextureModel.Change)change) {
+		case CHANGE_NAME:
+			for(Component component : contents.getComponents()) {
+				TextureView view = (TextureView)component;
+				
+				if(view.getModel() == model) {
+					contents.setTitleAt(contents.indexOfComponent(view), view.getModel().getName());
+					break;
+				}
+			}
+			break;
+		default:
+			break;
+		}
 	}
 }
