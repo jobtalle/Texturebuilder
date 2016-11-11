@@ -31,7 +31,7 @@ public class ResultView extends JPanel implements Observer {
 		switch((TextureModel.Change)change) {
 		case CHANGE_RESULT:
 			preview.setImage(this.model.getResult());
-			
+			System.out.println("no");
 			preview.invalidate();
 			scrollPane.updateUI();
 			break;

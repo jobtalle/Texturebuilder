@@ -12,6 +12,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -63,11 +64,16 @@ public class TextureChannel extends JPanel implements Observer {
 					
 					if(file.exists()) {
 						BufferedImage image = ImageIO.read(file);
+						BufferedImage copy = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
 						
-						model.setChannel(channel, image);
+						copy.getGraphics().drawImage(image, 0, 0, null);
+						
+						model.setChannel(channel, copy);
 					}
 				} catch (Exception error) {
-					System.out.println("This file is not a valid texture");
+					error.printStackTrace();
+					
+					JOptionPane.showMessageDialog(null, "This file is not a valid texture");
 				}
 			}
 		});

@@ -1,5 +1,7 @@
 package formats;
 
+import texturebuilder.TextureModel;
+
 public class Formats {
 	public enum Format {
 		FORMAT_PBR_8CHANNEL
@@ -17,5 +19,16 @@ public class Formats {
 	public static String[] getFormats()
 	{
 		return formatName;
+	}
+	
+	public static Formatter getFormatter(Format format, TextureModel model)
+	{
+		switch(format)
+		{
+		case FORMAT_PBR_8CHANNEL:
+			return new FormatterPBR8(model);
+		default:
+			return null;
+		}
 	}
 }

@@ -7,6 +7,7 @@ import java.util.Observable;
 import javax.swing.JOptionPane;
 
 import formats.Formats;
+import formats.Formatter;
 
 public class TextureModel extends Observable {
 	private static final Formats.Format defaultFormat = Formats.Format.FORMAT_PBR_8CHANNEL;
@@ -43,6 +44,7 @@ public class TextureModel extends Observable {
 	
 	private BufferedImage[] channels = new BufferedImage[Channel.values().length];
 	private BufferedImage result;
+	private Formatter formatter;
 	
 	public TextureModel()
 	{
@@ -125,8 +127,12 @@ public class TextureModel extends Observable {
 				return;
 			}
 		}
-		else
+		else {
 			initialized = true;
+			
+			// Create result
+			formatter = Formats.getFormatter(format, this);
+		}
 			
 		// Set size
 		setSize(image.getWidth(), image.getHeight());
@@ -134,7 +140,10 @@ public class TextureModel extends Observable {
 		// Store image
 		channels[channel.ordinal()] = image;
 		
+		result = formatter.format();
+		
 		change(Change.CHANGE_CHANNEL);
+		change(Change.CHANGE_RESULT);
 	}
 	
 	private void change(Change change)
