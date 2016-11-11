@@ -12,6 +12,7 @@ public class MenuBar extends JMenuBar {
 	private JMenu file = new JMenu("File");
 	private JMenuItem fileNew = new JMenuItem("New texture");
 	private JMenuItem fileClose = new JMenuItem("Close texture");
+	private JMenuItem fileExport = new JMenuItem("Export");
 	private JMenuItem fileExit = new JMenuItem("Exit");
 	
 	private Window window;
@@ -26,6 +27,8 @@ public class MenuBar extends JMenuBar {
 		// Add menu's
 		file.add(fileNew);
 		file.add(fileClose);
+		file.addSeparator();
+		file.add(fileExport);
 		file.addSeparator();
 		file.add(fileExit);
 		add(file);
@@ -45,6 +48,13 @@ public class MenuBar extends JMenuBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				window.removeView(window.getCurrentView());
+			}
+		});
+		
+		fileExport.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
 			}
 		});
 		
