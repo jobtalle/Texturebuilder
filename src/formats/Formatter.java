@@ -1,5 +1,7 @@
 package formats;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
@@ -15,6 +17,11 @@ public abstract class Formatter {
 	public BufferedImage format()
 	{
 		BufferedImage result = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics g = result.getGraphics();
+		
+		g.setColor(new Color(0, 0, 0, 255));
+		g.fillRect(0, 0, result.getWidth(), result.getHeight());
+		
 		int[] dest = ((DataBufferInt)result.getRaster().getDataBuffer()).getData();
 		
 		for(int channel = 0; channel < TextureModel.Channel.values().length; ++channel)
