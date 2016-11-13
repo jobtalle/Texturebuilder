@@ -39,10 +39,10 @@ public class FormatterPBR8 extends Formatter {
 			spheremap.x += 0.5;
 			spheremap.y += 0.5;
 			
-			dest[pixel + getSourceWidth() * getSourceHeight()] |= spheremap.toInt();
+			dest[pixel + getSourceSize()] |= spheremap.toInt();
 			break;
 		case CHANNEL_ROUGHNESS:
-			dest[pixel + getSourceWidth() * getSourceHeight()] |= src & 0x000000FF;
+			dest[pixel + getSourceSize()] |= src & 0x000000FF;
 			break;
 		default:
 			break;

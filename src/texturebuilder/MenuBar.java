@@ -60,6 +60,9 @@ public class MenuBar extends JMenuBar {
 		fileExport.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if(window.getCurrentView() == null)
+					return;
+				
 				BufferedImage result = window.getCurrentView().getModel().getResult();
 				
 				if(result != null)

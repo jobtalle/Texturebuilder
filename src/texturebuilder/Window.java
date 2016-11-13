@@ -24,6 +24,7 @@ public class Window extends JFrame implements Observer {
 		setTitle(defaultTitle);
 		setSize(defaultWidth, defaultHeight);
 		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
 		// Add contents
 		contents.setFocusable(false);
@@ -44,7 +45,7 @@ public class Window extends JFrame implements Observer {
 	
 	public void exit()
 	{
-		if(JOptionPane.showConfirmDialog(this, "Exit program?") == JOptionPane.OK_OPTION)
+		if(JOptionPane.showConfirmDialog(this, "Exit program?") == JOptionPane.YES_OPTION)
 			System.exit(0);
 	}
 	

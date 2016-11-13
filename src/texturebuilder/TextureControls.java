@@ -3,16 +3,25 @@ package texturebuilder;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
@@ -46,6 +55,7 @@ public class TextureControls extends JPanel implements Observer {
 		setPreferredSize(new Dimension(preferredWidth, 0));
 		setMinimumSize(new Dimension(preferredWidth, 0));
 		
+		configureDrop();
 		configureElements();
 		addElements();
 	}
@@ -143,5 +153,83 @@ public class TextureControls extends JPanel implements Observer {
 		constraints.gridy = 1;
 		wrapper.add(info, constraints);
 		add(wrapper, constraints);
+	}
+	
+	private void configureDrop()
+	{
+		setDropTarget(new DropTarget() {
+			@SuppressWarnings("unchecked")
+			public synchronized void drop(DropTargetDropEvent evt) {
+				try {
+					int accepted = 0;
+					int rejected = 0;
+					
+					String rejectedFiles = "";
+					
+					evt.acceptDrop(DnDConstants.ACTION_COPY);
+					List<File> droppedFiles = (List<File>) evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+					
+					for(File file : droppedFiles)
+					{
+						if(file.exists())
+						{
+							TextureModel.Channel channel = null;
+							
+							for(TextureModel.Channel c : TextureModel.Channel.values())
+							{
+								if(file.getName().contains(TextureModel.getChannelName(c)))
+								{
+									channel = c;
+									break;
+								}
+							}
+							
+							if(channel != null)
+							{
+								try
+								{
+									BufferedImage image = ImageIO.read(file);
+									BufferedImage copy = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+									
+									copy.getGraphics().drawImage(image, 0, 0, null);
+									
+									model.setChannel(channel, copy);
+									
+									++accepted;
+								}
+								catch (Exception error) {
+									rejectedFiles += file.getName() + '\n';
+									
+									++rejected;
+								}
+							}
+							else
+							{
+								rejectedFiles += file.getName() + '\n';
+								
+								++rejected;
+							}
+						}
+						else
+						{
+							rejectedFiles += file.getName() + '\n';
+							
+							++rejected;
+						}
+					}
+					
+					if(rejected != 0)
+					{
+						String rejectMsg = (accepted + rejected) + " files were given. " + rejected + " files could not be added:\n";
+						
+						JOptionPane.showMessageDialog(null, rejectMsg + rejectedFiles);
+					}
+				} catch (Exception error) {
+					error.printStackTrace();
+					
+					JOptionPane.showMessageDialog(null, "Invalid image file given");
+				}
+			}
+		});
 	}
 }

@@ -60,6 +60,14 @@ public class TextureChannel extends JPanel implements Observer {
 				try {
 					evt.acceptDrop(DnDConstants.ACTION_COPY);
 					List<File> droppedFiles = (List<File>) evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+					
+					if(droppedFiles.size() != 1)
+					{
+						JOptionPane.showMessageDialog(null, "Only one texture can be added to this channel");
+						
+						return;
+					}
+					
 					File file = droppedFiles.get(0);
 					
 					if(file.exists()) {

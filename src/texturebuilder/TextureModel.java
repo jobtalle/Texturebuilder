@@ -23,7 +23,7 @@ public class TextureModel extends Observable {
 	
 	private String name = "New texture";
 	private Formats.Format format = defaultFormat;
-	private boolean mirrorY = true; // Fetch from config
+	private boolean mirrorY = true; // TODO: Fetch from config
 	private int width;
 	private int height;
 	

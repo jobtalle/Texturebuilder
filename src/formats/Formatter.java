@@ -10,11 +10,12 @@ import texturebuilder.TextureModel;
 public abstract class Formatter {
 	private TextureModel model;
 	
-	public Formatter(TextureModel model) {
+	public Formatter(TextureModel model)
+	{
 		this.model = model;
 	}
 	
-	public BufferedImage format()
+	public final BufferedImage format()
 	{
 		BufferedImage result = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics g = result.getGraphics();
@@ -32,7 +33,7 @@ public abstract class Formatter {
 			{
 				int[] src = ((DataBufferInt)channelImage.getRaster().getDataBuffer()).getData();
 				
-				for(int pixel = 0; pixel < getSourceWidth() * getSourceHeight(); ++pixel)
+				for(int pixel = 0; pixel < getSourceSize(); ++pixel)
 				{
 					int source;
 					
@@ -49,12 +50,24 @@ public abstract class Formatter {
 		return result;
 	}
 	
-	protected int getSourceWidth() {
+	protected final int getSourceWidth()
+	{
 		return model.getWidth();
 	}
 	
-	protected int getSourceHeight() {
+	protected final int getSourceHeight()
+	{
 		return model.getHeight();
+	}
+	
+	protected final int getSourceSize()
+	{
+		return getSourceWidth() * getSourceHeight();
+	}
+	
+	protected final int getSize()
+	{
+		return getWidth() * getHeight();
 	}
 	
 	protected abstract int getWidth();
