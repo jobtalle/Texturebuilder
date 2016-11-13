@@ -60,6 +60,70 @@ public class TextureControls extends JPanel implements Observer {
 		addElements();
 	}
 	
+	public void addFiles(List<File> droppedFiles)
+	{
+		int accepted = 0;
+		int rejected = 0;
+		
+		String rejectedFiles = "";
+		
+		for(File file : droppedFiles)
+		{
+			if(file.exists())
+			{
+				TextureModel.Channel channel = null;
+				
+				for(TextureModel.Channel c : TextureModel.Channel.values())
+				{
+					if(file.getName().contains(TextureModel.getChannelName(c)))
+					{
+						channel = c;
+						break;
+					}
+				}
+				
+				if(channel != null)
+				{
+					try
+					{
+						BufferedImage image = ImageIO.read(file);
+						BufferedImage copy = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+						
+						copy.getGraphics().drawImage(image, 0, 0, null);
+						
+						model.setChannel(channel, copy);
+						
+						++accepted;
+					}
+					catch (Exception error) {
+						rejectedFiles += file.getName() + " - Invalid file\n";
+						
+						++rejected;
+					}
+				}
+				else
+				{
+					rejectedFiles += file.getName() + " - No known channel\n";
+					
+					++rejected;
+				}
+			}
+			else
+			{
+				rejectedFiles += file.getName() + " - Does not exist\n";
+				
+				++rejected;
+			}
+		}
+		
+		if(rejected != 0)
+		{
+			String rejectMsg = (accepted + rejected) + " files were given. " + rejected + " files could not be added:\n";
+			
+			JOptionPane.showMessageDialog(null, rejectMsg + rejectedFiles);
+		}
+	}
+	
 	@Override
 	public void update(Observable model, Object change) {
 		switch((TextureModel.Change)change) {
@@ -161,73 +225,12 @@ public class TextureControls extends JPanel implements Observer {
 			@SuppressWarnings("unchecked")
 			public synchronized void drop(DropTargetDropEvent evt) {
 				try {
-					int accepted = 0;
-					int rejected = 0;
-					
-					String rejectedFiles = "";
-					
 					evt.acceptDrop(DnDConstants.ACTION_COPY);
-					List<File> droppedFiles = (List<File>) evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
-					
-					for(File file : droppedFiles)
-					{
-						if(file.exists())
-						{
-							TextureModel.Channel channel = null;
-							
-							for(TextureModel.Channel c : TextureModel.Channel.values())
-							{
-								if(file.getName().contains(TextureModel.getChannelName(c)))
-								{
-									channel = c;
-									break;
-								}
-							}
-							
-							if(channel != null)
-							{
-								try
-								{
-									BufferedImage image = ImageIO.read(file);
-									BufferedImage copy = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-									
-									copy.getGraphics().drawImage(image, 0, 0, null);
-									
-									model.setChannel(channel, copy);
-									
-									++accepted;
-								}
-								catch (Exception error) {
-									rejectedFiles += file.getName() + '\n';
-									
-									++rejected;
-								}
-							}
-							else
-							{
-								rejectedFiles += file.getName() + '\n';
-								
-								++rejected;
-							}
-						}
-						else
-						{
-							rejectedFiles += file.getName() + '\n';
-							
-							++rejected;
-						}
-					}
-					
-					if(rejected != 0)
-					{
-						String rejectMsg = (accepted + rejected) + " files were given. " + rejected + " files could not be added:\n";
-						
-						JOptionPane.showMessageDialog(null, rejectMsg + rejectedFiles);
-					}
+					addFiles((List<File>) evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor));
 				} catch (Exception error) {
 					error.printStackTrace();
 					
-					JOptionPane.showMessageDialog(null, "Invalid image file given");
+					JOptionPane.showMessageDialog(null, "Couldn't accept these files");
 				}
 			}
 		});
