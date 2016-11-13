@@ -21,14 +21,14 @@ public class FormatterPBR8 extends Formatter {
 	}
 
 	@Override
-	protected void write(Channel channel, int pixel, int[] src, int[] dest) {
+	protected void write(Channel channel, int pixel, int src, int[] dest) {
 		switch(channel)
 		{
 		case CHANNEL_DIFFUSE:
-			dest[pixel] = src[pixel];
+			dest[pixel] = src;
 			break;
 		case CHANNEL_NORMALS:
-			Vector3 n = new Vector3(src[pixel]);
+			Vector3 n = new Vector3(src);
 			Vector2 spheremap = new Vector2(n.x, n.y);
 			
 			float divisor = (float) Math.sqrt(8 * n.z + 8);
@@ -42,7 +42,7 @@ public class FormatterPBR8 extends Formatter {
 			dest[pixel + getSourceWidth() * getSourceHeight()] |= spheremap.toInt();
 			break;
 		case CHANNEL_ROUGHNESS:
-			dest[pixel + getSourceWidth() * getSourceHeight()] |= src[pixel] & 0x000000FF;
+			dest[pixel + getSourceWidth() * getSourceHeight()] |= src & 0x000000FF;
 			break;
 		default:
 			break;

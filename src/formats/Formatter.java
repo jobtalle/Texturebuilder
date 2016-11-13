@@ -33,7 +33,16 @@ public abstract class Formatter {
 				int[] src = ((DataBufferInt)channelImage.getRaster().getDataBuffer()).getData();
 				
 				for(int pixel = 0; pixel < getSourceWidth() * getSourceHeight(); ++pixel)
-					write(TextureModel.Channel.values()[channel], pixel, src, dest);
+				{
+					int source;
+					
+					if(model.getMirrorY())
+						source = src[(getSourceHeight() - 1 - (pixel / getSourceWidth())) * getSourceWidth() + (pixel % getSourceWidth())];
+					else
+						source = src[pixel];
+					
+					write(TextureModel.Channel.values()[channel], pixel, source, dest);
+				}
 			}
 		}
 		
@@ -50,5 +59,5 @@ public abstract class Formatter {
 	
 	protected abstract int getWidth();
 	protected abstract int getHeight();
-	protected abstract void write(TextureModel.Channel channel, int pixel, int[] src, int[] dest);
+	protected abstract void write(TextureModel.Channel channel, int pixel, int src, int[] dest);
 }

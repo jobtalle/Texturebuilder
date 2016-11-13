@@ -9,6 +9,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -27,8 +28,12 @@ public class TextureControls extends JPanel implements Observer {
 	private TextureModel model;
 	
 	private JPanel wrapper = new JPanel();
+	private JPanel info = new JPanel();
+	private JPanel controls = new JPanel();
+	
 	private JTextField name = new JTextField();
 	private JComboBox<String> format = new JComboBox<String>(Formats.getFormats());
+	private JCheckBox mirrory = new JCheckBox();
 	private JLabel width = new JLabel();
 	private JLabel height = new JLabel();
 	private JCheckBox[] textures = new JCheckBox[TextureModel.Channel.values().length];
@@ -84,31 +89,48 @@ public class TextureControls extends JPanel implements Observer {
 			textures[i] = new JCheckBox();
 			textures[i].setEnabled(false);
 		}
+		
+		mirrory.setSelected(model.getMirrorY());
+		mirrory.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				model.setMirrorY(mirrory.isSelected());
+			}
+		});
 	}
 	
 	private void addElements()
 	{
-		wrapper.setLayout(new SpringLayout());
+		controls.setLayout(new SpringLayout());
+		controls.setBorder(BorderFactory.createTitledBorder("Properties"));
 		
-		wrapper.add(new JLabel("Name", JLabel.TRAILING));
-		wrapper.add(name);
+		controls.add(new JLabel("Name", JLabel.TRAILING));
+		controls.add(name);
 		
-		wrapper.add(new JLabel("Format", JLabel.TRAILING));
-		wrapper.add(format);
+		controls.add(new JLabel("Format", JLabel.TRAILING));
+		controls.add(format);
 		
-		wrapper.add(new JLabel("Width", JLabel.TRAILING));
-		wrapper.add(width);
+		controls.add(new JLabel("Mirror Y", JLabel.TRAILING));
+		controls.add(mirrory);
 		
-		wrapper.add(new JLabel("Height", JLabel.TRAILING));
-		wrapper.add(height);
+		SpringUtilities.makeCompactGrid(controls, 3, 2, 3, 3, 3, 3);
+		
+		info.setLayout(new SpringLayout());
+		info.setBorder(BorderFactory.createTitledBorder("Info"));
+		
+		info.add(new JLabel("Width", JLabel.TRAILING));
+		info.add(width);
+		
+		info.add(new JLabel("Height", JLabel.TRAILING));
+		info.add(height);
 		
 		for(int i = 0; i < textures.length; ++i)
 		{
-			wrapper.add(new JLabel(TextureModel.getChannelName(TextureModel.Channel.values()[i]), JLabel.TRAILING));
-			wrapper.add(textures[i]);
+			info.add(new JLabel(TextureModel.getChannelName(TextureModel.Channel.values()[i]), JLabel.TRAILING));
+			info.add(textures[i]);
 		}
 		
-		SpringUtilities.makeCompactGrid(wrapper, 4 + textures.length, 2, 3, 3, 3, 3);
+		SpringUtilities.makeCompactGrid(info, 2 + textures.length, 2, 3, 3, 3, 3);
 		
 		setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -116,6 +138,10 @@ public class TextureControls extends JPanel implements Observer {
 		constraints.weightx = constraints.weighty = 1;
 		constraints.anchor = GridBagConstraints.NORTH;
 		
+		wrapper.setLayout(new GridBagLayout());
+		wrapper.add(controls, constraints);
+		constraints.gridy = 1;
+		wrapper.add(info, constraints);
 		add(wrapper, constraints);
 	}
 }

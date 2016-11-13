@@ -52,7 +52,8 @@ public class MenuBar extends JMenuBar {
 		fileClose.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				window.removeView(window.getCurrentView());
+				if(window.getCurrentView() != null)
+					window.removeView(window.getCurrentView());
 			}
 		});
 		
