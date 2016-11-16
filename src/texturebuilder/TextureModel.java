@@ -13,6 +13,7 @@ public class TextureModel extends Observable {
 	private static final Formats.Format defaultFormat = Formats.Format.FORMAT_PBR_8CHANNEL;
 	private static final String[] channelName = {
 			"Diffuse",
+			"Occlusion",
 			"Roughness",
 			"Metallic",
 			"Normals",
@@ -29,6 +30,7 @@ public class TextureModel extends Observable {
 	
 	public enum Channel {
 		CHANNEL_DIFFUSE,
+		CHANNEL_OCCLUSION,
 		CHANNEL_ROUGHNESS,
 		CHANNEL_METALLIC,
 		CHANNEL_NORMALS,

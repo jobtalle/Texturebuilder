@@ -2,7 +2,7 @@ package formats;
 
 import texturebuilder.TextureModel;
 
-public class Formats {
+public abstract class Formats {
 	public enum Format {
 		FORMAT_PBR_8CHANNEL
 	}

@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
@@ -26,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 
+import formats.ChannelExtractor;
 import formats.Formats;
 import texturebuilder.TextureModel.Channel;
 import utils.SpringUtilities;
@@ -71,27 +73,36 @@ public class TextureControls extends JPanel implements Observer {
 		{
 			if(file.exists())
 			{
-				TextureModel.Channel channel = null;
+				Vector<TextureModel.Channel> channels = new Vector<TextureModel.Channel>();
 				
 				for(TextureModel.Channel c : TextureModel.Channel.values())
 				{
 					if(file.getName().contains(TextureModel.getChannelName(c)))
-					{
-						channel = c;
-						break;
-					}
+						channels.add(c);
 				}
 				
-				if(channel != null)
+				if(channels.size() != 0)
 				{
 					try
 					{
 						BufferedImage image = ImageIO.read(file);
 						BufferedImage copy = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-						
 						copy.getGraphics().drawImage(image, 0, 0, null);
 						
-						model.setChannel(channel, copy);
+						if(channels.size() == 1)
+						{
+							model.setChannel(channels.get(0), copy);
+						}
+						else
+						{
+							// Set all found channels
+							for(Channel channel : channels)
+							{
+								BufferedImage filtered = ChannelExtractor.extract(copy, ChannelExtractor.Channel.values()[channels.indexOf(channel)]);
+								
+								model.setChannel(channel, filtered);
+							}
+						}
 						
 						++accepted;
 					}
