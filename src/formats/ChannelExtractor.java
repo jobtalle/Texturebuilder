@@ -1,6 +1,7 @@
 package formats;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 public class ChannelExtractor {
 	public enum Channel {
@@ -13,14 +14,14 @@ public class ChannelExtractor {
 	{
 		BufferedImage filtered = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		
-		for(int y = 0; y < source.getHeight(); ++y)
-			for(int x = 0; x < source.getWidth(); ++x)
-			{
-				int value = (source.getRGB(x, y) << ((1 + channel.ordinal()) << 3)) & 0xFF000000;
-				int grayscale = 255 | (value >> 8) | (value >> 16) | (value >> 24);
-				
-				filtered.setRGB(x, y, grayscale);
-			}
+		int[] src = ((DataBufferInt)source.getRaster().getDataBuffer()).getData();
+		int[] dest = ((DataBufferInt)filtered.getRaster().getDataBuffer()).getData();
+		
+		for(int pixel = 0; pixel < source.getWidth() * source.getHeight(); ++pixel)
+		{
+			int value = (src[pixel] >> ((Channel.values().length - 1 - channel.ordinal()) << 3)) & 0xFF;
+			dest[pixel] = value | (value << 8) | (value << 16) | (0xFF << 24);
+		}
 		
 		return filtered;
 	}
