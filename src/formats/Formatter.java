@@ -8,7 +8,7 @@ import java.awt.image.DataBufferInt;
 import texturebuilder.TextureModel;
 
 public abstract class Formatter {
-	private TextureModel model;
+	protected TextureModel model;
 	
 	public Formatter(TextureModel model)
 	{

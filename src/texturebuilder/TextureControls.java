@@ -45,6 +45,7 @@ public class TextureControls extends JPanel implements Observer {
 	private JTextField name = new JTextField();
 	private JComboBox<String> format = new JComboBox<String>(Formats.getFormats());
 	private JCheckBox mirrory = new JCheckBox();
+	private JCheckBox invertRoughness = new JCheckBox();
 	private JLabel width = new JLabel();
 	private JLabel height = new JLabel();
 	private JCheckBox[] textures = new JCheckBox[TextureModel.Channel.values().length];
@@ -182,6 +183,14 @@ public class TextureControls extends JPanel implements Observer {
 				model.setMirrorY(mirrory.isSelected());
 			}
 		});
+		
+		invertRoughness.setSelected(model.getInvertRoughness());
+		invertRoughness.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				model.setInvertRoughness(invertRoughness.isSelected());
+			}
+		});
 	}
 	
 	private void addElements()
@@ -198,7 +207,10 @@ public class TextureControls extends JPanel implements Observer {
 		controls.add(new JLabel("Mirror Y", JLabel.TRAILING));
 		controls.add(mirrory);
 		
-		SpringUtilities.makeCompactGrid(controls, 3, 2, 3, 3, 3, 3);
+		controls.add(new JLabel("Invert roughness", JLabel.TRAILING));
+		controls.add(invertRoughness);
+		
+		SpringUtilities.makeCompactGrid(controls, 4, 2, 3, 3, 3, 3);
 		
 		info.setLayout(new SpringLayout());
 		info.setBorder(BorderFactory.createTitledBorder("Info"));

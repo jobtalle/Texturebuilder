@@ -42,7 +42,10 @@ public class FormatterPBR8 extends Formatter {
 			dest[pixel + getSourceSize()] |= spheremap.toInt();
 			break;
 		case CHANNEL_ROUGHNESS:
-			dest[pixel + getSourceSize()] |= src & 0x000000FF;
+			if(model.getInvertRoughness())
+				dest[pixel + getSourceSize()] |= 255 - (src & 0xFF);
+			else
+				dest[pixel + getSourceSize()] |= src & 0xFF;
 			break;
 		case CHANNEL_OCCLUSION:
 			int r = (dest[pixel] >> 16) & 0xFF;

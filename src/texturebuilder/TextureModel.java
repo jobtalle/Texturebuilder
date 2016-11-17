@@ -25,6 +25,7 @@ public class TextureModel extends Observable {
 	private String name = "New texture";
 	private Formats.Format format = defaultFormat;
 	private boolean mirrorY = true; // TODO: Fetch from config
+	private boolean invertRoughness = true; // TODO: Fetch from config
 	private int width;
 	private int height;
 	
@@ -43,7 +44,8 @@ public class TextureModel extends Observable {
 		CHANGE_SIZE,
 		CHANGE_RESULT,
 		CHANGE_FORMAT,
-		CHANGE_MIRROR_Y
+		CHANGE_MIRROR_Y,
+		CHANGE_INVERT_ROUGHNESS
 	}
 	
 	private BufferedImage[] channels = new BufferedImage[Channel.values().length];
@@ -90,6 +92,11 @@ public class TextureModel extends Observable {
 		return mirrorY;
 	}
 	
+	public boolean getInvertRoughness()
+	{
+		return invertRoughness;
+	}
+	
 	public int getWidth()
 	{
 		return width;
@@ -121,6 +128,15 @@ public class TextureModel extends Observable {
 		mirrorY = mirror;
 		
 		change(Change.CHANGE_MIRROR_Y);
+		
+		renderResult();
+	}
+	
+	public void setInvertRoughness(boolean invert)
+	{
+		invertRoughness = invert;
+		
+		change(Change.CHANGE_INVERT_ROUGHNESS);
 		
 		renderResult();
 	}
