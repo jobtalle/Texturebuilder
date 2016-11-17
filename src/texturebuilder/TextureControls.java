@@ -34,7 +34,7 @@ import utils.SpringUtilities;
 
 @SuppressWarnings("serial")
 public class TextureControls extends JPanel implements Observer {
-	private static final int preferredWidth = 200;
+	private static final int preferredWidth = 240;
 	
 	private TextureModel model;
 	
