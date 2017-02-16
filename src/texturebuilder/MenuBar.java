@@ -3,6 +3,7 @@ package texturebuilder;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -62,13 +63,16 @@ public class MenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent e) {
 				if(window.getCurrentView() == null)
 					return;
-				
-				BufferedImage result = window.getCurrentView().getModel().getResult();
+
+				TextureModel model = window.getCurrentView().getModel();
+				BufferedImage result = model.getResult();
 				
 				if(result != null)
 				{
-					JFileChooser chooser = new JFileChooser();
-					
+					JFileChooser chooser = new JFileChooser(new File("."));
+					// Set save file to the name of the model and replace spaces with underscores
+					chooser.setSelectedFile(new File(model.getName().replace(' ', '_') + ".png"));
+
 					if(chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
 					{
 						try {
